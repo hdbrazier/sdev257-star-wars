@@ -1,8 +1,8 @@
 import { registerRootComponent } from 'expo';
-
 import App from './App';
 
-// registerRootComponent calls AppRegistry.registerComponent('main', () => App);
-// It also ensures that whether you load the app in Expo Go or in a native build,
-// the environment is set up appropriately
+// Register for native environments (Expo Go/dev client)
 registerRootComponent(App);
+
+// Also default-export for Snack/Web's loader
+export default App;
