@@ -96,7 +96,7 @@ export default function Planets() {
         contentContainerStyle={styles.listContent}
       />
 
-      {/* Modal to display submitted search term */}
+      {/* Modal to display searched term */}
       <Modal
         visible={modalVisible}
         transparent
