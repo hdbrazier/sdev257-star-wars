@@ -1,14 +1,20 @@
+// Fetch from SWAPI
+// Search Box
+// Vertical ScrollView
+// Swipeable Row
+// Modal shows search text or swiped item text
 import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
-  FlatList,
   ActivityIndicator,
   StyleSheet,
   TextInput,
   TouchableOpacity,
   Modal,
+  ScrollView,
 } from 'react-native';
+import SwipeableRow from '../components/SwipeableRow';
 
 export default function Planets() {
   const [planets, setPlanets] = useState([]);
@@ -16,8 +22,8 @@ export default function Planets() {
   const [error, setError] = useState(null);
 
   const [searchText, setSearchText] = useState('');
-  const [submittedText, setSubmittedText] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalText, setModalText] = useState('');
 
   useEffect(() => {
     async function fetchPlanets() {
@@ -42,17 +48,15 @@ export default function Planets() {
   const handleSearchSubmit = () => {
     const trimmed = searchText.trim();
     if (!trimmed) return;
-    setSubmittedText(trimmed);
+    setModalText(`Search: ${trimmed}`);
     setModalVisible(true);
   };
 
-  const renderItem = ({ item }) => (
-    <View style={styles.item}>
-      <Text style={styles.title}>{item.name}</Text>
-      <Text style={styles.subtitle}>Climate: {item.climate}</Text>
-      <Text style={styles.subtitle}>Population: {item.population}</Text>
-    </View>
-  );
+  const handlePlanetSwiped = (planet) => {
+    // Show item text in the modal
+    setModalText(`Planet: ${planet.name}`);
+    setModalVisible(true);
+  };
 
   if (loading) {
     return (
@@ -77,7 +81,8 @@ export default function Planets() {
       <View style={styles.searchRow}>
         <TextInput
           style={styles.searchInput}
-          placeholder="Search term…"
+          placeholder="Enter search term…"
+          placeholderTextColor="#6B7280"
           value={searchText}
           onChangeText={setSearchText}
           onSubmitEditing={handleSearchSubmit}
@@ -88,15 +93,22 @@ export default function Planets() {
         </TouchableOpacity>
       </View>
 
-      {/* List of planets */}
-      <FlatList
-        data={planets}
-        keyExtractor={(item) => item.url}
-        renderItem={renderItem}
-        contentContainerStyle={styles.listContent}
-      />
+      {/* ScrollView wrapping the list of items */}
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        {planets.map((planet) => (
+          <View key={planet.url} style={styles.planetBlock}>
+            <SwipeableRow
+              label={planet.name}
+              onSwiped={() => handlePlanetSwiped(planet)}
+            />
+            {/* Extra details below the swipe row */}
+            <Text style={styles.subtitle}>Climate: {planet.climate}</Text>
+            <Text style={styles.subtitle}>Population: {planet.population}</Text>
+          </View>
+        ))}
+      </ScrollView>
 
-      {/* Modal to display searched term */}
+      {/* Modal that shows search text or swiped item text */}
       <Modal
         visible={modalVisible}
         transparent
@@ -105,8 +117,8 @@ export default function Planets() {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Search Term</Text>
-            <Text style={styles.modalText}>{submittedText}</Text>
+            <Text style={styles.modalTitle}>Info</Text>
+            <Text style={styles.modalText}>{modalText}</Text>
             <TouchableOpacity
               style={styles.modalButton}
               onPress={() => setModalVisible(false)}
@@ -122,13 +134,13 @@ export default function Planets() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: 'black' },
-  listContent: { padding: 16, paddingTop: 8 },
+
   center: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 16,
     backgroundColor: 'black',
+    paddingHorizontal: 16,
   },
   loadingText: { color: 'white', marginTop: 8 },
   errorText: { color: 'tomato', textAlign: 'center' },
@@ -139,7 +151,6 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 8,
     alignItems: 'center',
-    gap: 8,
   },
   searchInput: {
     flex: 1,
@@ -148,8 +159,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#111827',
     borderRadius: 8,
     color: 'white',
+    borderWidth: 1,
+    borderColor: '#374151',
   },
   searchButton: {
+    marginLeft: 8,
     paddingHorizontal: 12,
     paddingVertical: 8,
     backgroundColor: '#3B82F6',
@@ -160,14 +174,20 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 
-  item: {
-    padding: 12,
-    marginBottom: 10,
-    borderRadius: 8,
-    backgroundColor: '#111827',
+  scrollContent: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    paddingBottom: 24,
   },
-  title: { color: 'white', fontSize: 18, fontWeight: '700', marginBottom: 4 },
-  subtitle: { color: '#9CA3AF', fontSize: 14 },
+
+  planetBlock: {
+    marginBottom: 16,
+  },
+  subtitle: {
+    color: '#9CA3AF',
+    fontSize: 12,
+    marginLeft: 4,
+  },
 
   modalOverlay: {
     flex: 1,

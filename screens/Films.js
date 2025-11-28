@@ -1,14 +1,20 @@
+// Fetch from SWAPI
+// Search Box
+// Vertical ScrollView
+// Swipeable Row
+// Modal shows search text or swiped item text
 import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
-  FlatList,
   ActivityIndicator,
   StyleSheet,
   TextInput,
   TouchableOpacity,
   Modal,
+  ScrollView,
 } from 'react-native';
+import SwipeableRow from '../components/SwipeableRow';
 
 export default function Films() {
   const [films, setFilms] = useState([]);
@@ -16,8 +22,8 @@ export default function Films() {
   const [error, setError] = useState(null);
 
   const [searchText, setSearchText] = useState('');
-  const [submittedText, setSubmittedText] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalText, setModalText] = useState('');
 
   useEffect(() => {
     async function fetchFilms() {
@@ -42,18 +48,14 @@ export default function Films() {
   const handleSearchSubmit = () => {
     const trimmed = searchText.trim();
     if (!trimmed) return;
-    setSubmittedText(trimmed);
+    setModalText(`Search: ${trimmed}`);
     setModalVisible(true);
   };
 
-  const renderItem = ({ item }) => (
-    <View style={styles.item}>
-      <Text style={styles.title}>{item.title}</Text>
-      <Text style={styles.subtitle}>Episode: {item.episode_id}</Text>
-      <Text style={styles.subtitle}>Director: {item.director}</Text>
-      <Text style={styles.subtitle}>Release: {item.release_date}</Text>
-    </View>
-  );
+  const handleFilmSwiped = (film) => {
+    setModalText(`Film: ${film.title}`);
+    setModalVisible(true);
+  };
 
   if (loading) {
     return (
@@ -74,11 +76,12 @@ export default function Films() {
 
   return (
     <View style={styles.container}>
-      {/* Search input + button */}
+      {/* Search */}
       <View style={styles.searchRow}>
         <TextInput
           style={styles.searchInput}
-          placeholder="Search term…"
+          placeholder="Enter search term…"
+          placeholderTextColor="#6B7280"
           value={searchText}
           onChangeText={setSearchText}
           onSubmitEditing={handleSearchSubmit}
@@ -89,13 +92,20 @@ export default function Films() {
         </TouchableOpacity>
       </View>
 
-      {/* List of films */}
-      <FlatList
-        data={films}
-        keyExtractor={(item) => item.url}
-        renderItem={renderItem}
-        contentContainerStyle={styles.listContent}
-      />
+      {/* Scrollable list */}
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        {films.map((film) => (
+          <View key={film.url} style={styles.block}>
+            <SwipeableRow
+              label={film.title}
+              onSwiped={() => handleFilmSwiped(film)}
+            />
+            <Text style={styles.subtitle}>Episode: {film.episode_id}</Text>
+            <Text style={styles.subtitle}>Director: {film.director}</Text>
+            <Text style={styles.subtitle}>Release: {film.release_date}</Text>
+          </View>
+        ))}
+      </ScrollView>
 
       {/* Modal */}
       <Modal
@@ -106,8 +116,8 @@ export default function Films() {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Search Term</Text>
-            <Text style={styles.modalText}>{submittedText}</Text>
+            <Text style={styles.modalTitle}>Info</Text>
+            <Text style={styles.modalText}>{modalText}</Text>
             <TouchableOpacity
               style={styles.modalButton}
               onPress={() => setModalVisible(false)}
@@ -123,13 +133,12 @@ export default function Films() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: 'black' },
-  listContent: { padding: 16, paddingTop: 8 },
   center: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 16,
     backgroundColor: 'black',
+    paddingHorizontal: 16,
   },
   loadingText: { color: 'white', marginTop: 8 },
   errorText: { color: 'tomato', textAlign: 'center' },
@@ -140,7 +149,6 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 8,
     alignItems: 'center',
-    gap: 8,
   },
   searchInput: {
     flex: 1,
@@ -149,8 +157,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#111827',
     borderRadius: 8,
     color: 'white',
+    borderWidth: 1,
+    borderColor: '#374151',
   },
   searchButton: {
+    marginLeft: 8,
     paddingHorizontal: 12,
     paddingVertical: 8,
     backgroundColor: '#3B82F6',
@@ -161,14 +172,19 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 
-  item: {
-    padding: 12,
-    marginBottom: 10,
-    borderRadius: 8,
-    backgroundColor: '#111827',
+  scrollContent: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    paddingBottom: 24,
   },
-  title: { color: 'white', fontSize: 18, fontWeight: '700', marginBottom: 4 },
-  subtitle: { color: '#9CA3AF', fontSize: 14 },
+  block: {
+    marginBottom: 16,
+  },
+  subtitle: {
+    color: '#9CA3AF',
+    fontSize: 12,
+    marginLeft: 4,
+  },
 
   modalOverlay: {
     flex: 1,
