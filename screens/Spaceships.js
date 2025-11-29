@@ -15,6 +15,8 @@ import {
   ScrollView,
 } from 'react-native';
 import SwipeableRow from '../components/SwipeableRow';
+import Animated, { SlideInLeft, SlideOutRight } from 'react-native-reanimated';
+
 
 export default function Spaceships() {
   const [ships, setShips] = useState([]);
