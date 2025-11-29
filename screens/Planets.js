@@ -15,6 +15,8 @@ import {
   ScrollView,
 } from 'react-native';
 import SwipeableRow from '../components/SwipeableRow';
+import Animated, { SlideInLeft, SlideOutRight } from 'react-native-reanimated';
+
 
 export default function Planets() {
   const [planets, setPlanets] = useState([]);
@@ -96,17 +98,24 @@ export default function Planets() {
       {/* ScrollView wrapping the list of items */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {planets.map((planet) => (
-          <View key={planet.url} style={styles.planetBlock}>
-            <SwipeableRow
-              label={planet.name}
-              onSwiped={() => handlePlanetSwiped(planet)}
-            />
-            {/* Extra details below the swipe row */}
-            <Text style={styles.subtitle}>Climate: {planet.climate}</Text>
-            <Text style={styles.subtitle}>Population: {planet.population}</Text>
-          </View>
+          <Animated.View 
+            key={planet.url}
+            entering={SlideInLeft.duration(400)}
+            exiting={SlideOutRight.duration(300)}
+          >
+            <View style={styles.planetBlock}>
+              <SwipeableRow
+                label={planet.name}
+                onSwiped={() => handlePlanetSwiped(planet)}
+              />
+              {/* Extra details below the swipe row */}
+              <Text style={styles.subtitle}>Climate: {planet.climate}</Text>
+              <Text style={styles.subtitle}>Population: {planet.population}</Text>
+            </View>
+          </Animated.View>
         ))}
       </ScrollView>
+
 
       {/* Modal that shows search text or swiped item text */}
       <Modal

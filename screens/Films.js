@@ -95,15 +95,21 @@ export default function Films() {
       {/* Scrollable list */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {films.map((film) => (
-          <View key={film.url} style={styles.block}>
-            <SwipeableRow
-              label={film.title}
-              onSwiped={() => handleFilmSwiped(film)}
-            />
-            <Text style={styles.subtitle}>Episode: {film.episode_id}</Text>
-            <Text style={styles.subtitle}>Director: {film.director}</Text>
-            <Text style={styles.subtitle}>Release: {film.release_date}</Text>
-          </View>
+          <Animated.View
+            key={film.episode_id}
+            entering={SlideInLeft.duration(400)}
+            exiting={SlideOutRight.duration(300)}
+          >
+            <View style={styles.block}>
+              <SwipeableRow
+                label={film.title}
+                onSwiped={() => handleFilmSwiped(film)}
+              />
+              <Text style={styles.subtitle}>Episode: {film.episode_id}</Text>
+              <Text style={styles.subtitle}>Director: {film.director}</Text>
+              <Text style={styles.subtitle}>Release: {film.release_date}</Text>
+            </View>
+          </Animated.View>  
         ))}
       </ScrollView>
 

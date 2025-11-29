@@ -95,15 +95,22 @@ export default function Spaceships() {
       {/* Scrollable list */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {ships.map((ship) => (
-          <View key={ship.url} style={styles.block}>
-            <SwipeableRow
-              label={ship.name}
-              onSwiped={() => handleShipSwiped(ship)}
-            />
-            <Text style={styles.subtitle}>Model: {ship.model}</Text>
-            <Text style={styles.subtitle}>Manufacturer: {ship.manufacturer}</Text>
-            <Text style={styles.subtitle}>Crew: {ship.crew}</Text>
-          </View>
+          <Animated.View
+            key={ship.url}
+            entering={SlideInLeft.duration(400)}
+            exiting={SlideOutRight.duration(300)}
+          >
+            <View style={styles.block}>
+              <SwipeableRow
+                label={ship.name}
+                onSwiped={() => handleShipSwiped(ship)}
+              />
+
+              <Text style={styles.subtitle}>Model: {ship.model}</Text>
+              <Text style={styles.subtitle}>Manufacturer: {ship.manufacturer}</Text>
+              <Text style={styles.subtitle}>Crew: {ship.crew}</Text>
+            </View>
+          </Animated.View>
         ))}
       </ScrollView>
 
