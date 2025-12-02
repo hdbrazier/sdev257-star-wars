@@ -16,6 +16,8 @@ import {
 } from 'react-native';
 import SwipeableRow from '../components/SwipeableRow';
 import Animated, { SlideInLeft, SlideOutRight } from 'react-native-reanimated';
+import LazyImage from "../components/LazyImage";
+
 
 
 export default function Planets() {
@@ -94,6 +96,11 @@ export default function Planets() {
           <Text style={styles.searchButtonText}>Submit</Text>
         </TouchableOpacity>
       </View>
+
+      <LazyImage
+        style={styles.headerImage}
+        source={require("../assets/planets-header.png")}
+      />
 
       {/* ScrollView wrapping the list of items */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -233,4 +240,11 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '600',
   },
+  headerImage: {
+    width: "100%",
+    height: 180,
+    marginBottom: 16,
+    overflow: "hidden", // keeps the image nicely clipped
+  },
+
 });

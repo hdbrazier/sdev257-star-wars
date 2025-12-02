@@ -16,6 +16,8 @@ import {
 } from 'react-native';
 import SwipeableRow from '../components/SwipeableRow';
 import Animated, { SlideInLeft, SlideOutRight } from 'react-native-reanimated';
+import LazyImage from "../components/LazyImage";
+
 
 
 export default function Spaceships() {
@@ -93,6 +95,11 @@ export default function Spaceships() {
           <Text style={styles.searchButtonText}>Submit</Text>
         </TouchableOpacity>
       </View>
+
+      <LazyImage
+        style={styles.headerImage}
+        source={require("../assets/ships-header.png")}
+      />
 
       {/* Scrollable list */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -230,4 +237,10 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '600',
   },
+  headerImage: {
+    width: "100%",
+    height: 180,
+    marginBottom: 16,
+  },
+
 });
