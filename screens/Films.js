@@ -98,7 +98,7 @@ export default function Films() {
 
       <LazyImage
         style={styles.headerImage}
-        source={require("../assets/films-header.png")}
+        source={require("../assets/films-header.jpg")}
       />
 
       {/* Scrollable list */}

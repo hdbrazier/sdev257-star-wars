@@ -98,7 +98,7 @@ export default function Spaceships() {
 
       <LazyImage
         style={styles.headerImage}
-        source={require("../assets/ships-header.png")}
+        source={require("../assets/ships-header.jpg")}
       />
 
       {/* Scrollable list */}

@@ -99,7 +99,7 @@ export default function Planets() {
 
       <LazyImage
         style={styles.headerImage}
-        source={require("../assets/planets-header.png")}
+        source={require("../assets/planets-header.jpg")}
       />
 
       {/* ScrollView wrapping the list of items */}
