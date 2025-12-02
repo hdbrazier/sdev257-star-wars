@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Image, StyleSheet } from "react-native";
 
-const placeholder = require("../assets/placeholder.png");
+const placeholder = require("../assets/placeholder.jpg");
 
 export default function LazyImage({ style, source, resizeMode = "cover" }) {
   const [loaded, setLoaded] = useState(false);
