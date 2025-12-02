@@ -40,7 +40,7 @@ export default function Planets() {
 
         setPlanets(json.results || []);
       } catch (e) {
-        setError('Failed to load planets 🪐');
+        setError('Failed to load planets');
       } finally {
         setLoading(false);
       }
@@ -100,6 +100,7 @@ export default function Planets() {
       <LazyImage
         style={styles.headerImage}
         source={require("../assets/planets-header.jpg")}
+        resizeMode="contain"
       />
 
       {/* ScrollView wrapping the list of items */}
@@ -242,9 +243,13 @@ const styles = StyleSheet.create({
   },
   headerImage: {
     width: "100%",
-    height: 180,
+    aspectRatio: 3 / 1,
+    borderRadius: 8,
+    overflow: "hidden",
     marginBottom: 16,
-    overflow: "hidden", // keeps the image nicely clipped
+    justifyContent: "center",
+    alignItems: "center",
   },
+
 
 });

@@ -1,33 +1,43 @@
 import React, { useState } from "react";
-import { View, Image, ActivityIndicator, StyleSheet } from "react-native";
+import { View, Image, StyleSheet } from "react-native";
 
-export default function LazyImage({ style, source, resizeMode = "cover" }) {
+const placeholder = require("../assets/placeholder.jpg");
+
+export default function LazyImage({
+  style,
+  source,
+  resizeMode = "contain",
+}) {
   const [loaded, setLoaded] = useState(false);
 
   return (
-    <View style={style}>
-      {/* Spinner while the real image is loading. Had issues using real image */}
+    <View style={[style, styles.container]}>
+      {/* Placeholder while the real image is loading */}
       {!loaded && (
-        <View style={styles.loader}>
-          <ActivityIndicator size="large" />
-        </View>
+        <Image
+          source={placeholder}
+          style={styles.image}
+          resizeMode={resizeMode}
+        />
       )}
 
+      {/* Actual image*/}
       <Image
         source={source}
-        style={StyleSheet.absoluteFillObject}
+        style={styles.image}
         resizeMode={resizeMode}
-        onLoadEnd={() => setLoaded(true)}
+        onLoad={() => setLoaded(true)}
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  loader: {
-    ...StyleSheet.absoluteFillObject,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#000", 
+  container: {
+    overflow: "hidden", 
+  },
+  image: {
+    width: "100%",
+    height: "100%",
   },
 });

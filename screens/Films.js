@@ -40,7 +40,7 @@ export default function Films() {
 
         setFilms(json.results || []);
       } catch (e) {
-        setError('Failed to load films 🎬');
+        setError('Failed to load films');
       } finally {
         setLoading(false);
       }
@@ -99,6 +99,7 @@ export default function Films() {
       <LazyImage
         style={styles.headerImage}
         source={require("../assets/films-header.jpg")}
+        resizeMode="contain"
       />
 
       {/* Scrollable list */}
@@ -238,8 +239,13 @@ const styles = StyleSheet.create({
   },
   headerImage: {
     width: "100%",
-    height: 180,
+    aspectRatio: 3 / 1,
+    borderRadius: 8,
+    overflow: "hidden",
     marginBottom: 16,
+    justifyContent: "center",
+    alignItems: "center",
   },
+
 
 });
